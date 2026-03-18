@@ -195,59 +195,81 @@ public class EnumCheckMojo extends AbstractMojo {
     // -------------------------------------------------------------------------
 
     /**
-     * 收集所有需要扫描的源码根目录。
-     * <p>如果 {@link #scanSubmodules} 为 true，则递归收集当前项目
-     * 以及所有子模块的编译源码根目录。
-     *
-     * @return 所有需要扫描的源码根目录列表
+     * 保存源码目录和对应的编译输出目录的配对。
      */
-    private List<File> collectSourceRoots() {
-        List<File> roots = new ArrayList<>();
+    private static class SourceRootWithOutput {
+        private final File sourceRoot;
+        private final File outputDir;
 
-        // 添加当前项目的主源码目录
-        addMainSourceRoots(project, roots);
-
-        // 如果启用了扫描子模块，则添加所有子模块
-        if (scanSubmodules) {
-            collectSubmoduleSourceRoots(project, roots);
+        public SourceRootWithOutput(File sourceRoot, File outputDir) {
+            this.sourceRoot = sourceRoot;
+            this.outputDir = outputDir;
         }
 
-        getLog().debug("共收集到 " + roots.size() + " 个源码目录");
-        return roots;
+        public File getSourceRoot() {
+            return sourceRoot;
+        }
+
+        public File getOutputDir() {
+            return outputDir;
+        }
     }
 
     /**
-     * 将给定项目的主源码目录添加到列表中。
+     * 收集所有需要扫描的源码目录及其对应的编译输出目录。
+     * <p>如果 {@link #scanSubmodules} 为 true，则递归收集当前项目
+     * 以及所有子模块的编译源码根目录。
+     *
+     * @return 所有需要扫描的(源码目录, 输出目录)配对列表
+     */
+    private List<SourceRootWithOutput> collectSourceRootsWithOutput() {
+        List<SourceRootWithOutput> result = new ArrayList<>();
+
+        // 添加当前项目的主源码目录
+        addMainSourceRootsWithOutput(project, result);
+
+        // 如果启用了扫描子模块，则添加所有子模块
+        if (scanSubmodules) {
+            collectSubmoduleSourceRootsWithOutput(project, result);
+        }
+
+        getLog().debug("共收集到 " + result.size() + " 个源码目录");
+        return result;
+    }
+
+    /**
+     * 将给定项目的主源码目录添加到列表中，同时记录对应的输出目录。
      *
      * @param proj   项目
      * @param result 结果列表
      */
-    private void addMainSourceRoots(MavenProject proj, List<File> result) {
+    private void addMainSourceRootsWithOutput(MavenProject proj, List<SourceRootWithOutput> result) {
         @SuppressWarnings("unchecked")
         List<String> compileSourceRoots = proj.getCompileSourceRoots();
+        File outputDir = new File(proj.getBuild().getOutputDirectory());
         for (String root : compileSourceRoots) {
             File rootFile = new File(root);
             if (rootFile.exists()) {
-                result.add(rootFile);
-                getLog().debug("添加源码目录: " + rootFile.getAbsolutePath());
+                result.add(new SourceRootWithOutput(rootFile, outputDir));
+                getLog().debug("添加源码目录: " + rootFile.getAbsolutePath() + " -> " + outputDir.getAbsolutePath());
             }
         }
     }
 
     /**
-     * 递归收集所有子模块的源码目录。
+     * 递归收集所有子模块的源码目录和输出目录。
      *
      * @param proj   当前项目
      * @param result 结果列表
      */
-    private void collectSubmoduleSourceRoots(MavenProject proj, List<File> result) {
+    private void collectSubmoduleSourceRootsWithOutput(MavenProject proj, List<SourceRootWithOutput> result) {
         @SuppressWarnings("unchecked")
         List<MavenProject> modules = proj.getCollectedProjects();
         if (modules != null && !modules.isEmpty()) {
-            for (MavenProject module : modules) {
-                addMainSourceRoots(module, result);
+            for (MavenModule module : modules) {
+                addMainSourceRootsWithOutput(module, result);
                 // 递归处理子模块的子模块（支持多级嵌套）
-                collectSubmoduleSourceRoots(module, result);
+                collectSubmoduleSourceRootsWithOutput(module, result);
             }
         }
     }
