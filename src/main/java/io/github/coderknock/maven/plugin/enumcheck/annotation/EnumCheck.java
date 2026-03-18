@@ -1,4 +1,5 @@
-package com.coderknock.maven.plugin.enumcheck.annotation;
+package io.github.coderknock.maven.plugin.enumcheck.annotation;
+
 
 /**
  * 枚举重复值检查标记注解。

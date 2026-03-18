@@ -1,6 +1,6 @@
 package test.enums;
 
-import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 /**
  * 虽然有注解但是 enabled = false，应该被跳过。

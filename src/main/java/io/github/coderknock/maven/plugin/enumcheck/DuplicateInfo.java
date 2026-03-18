@@ -1,33 +1,8 @@
-package com.coderknock.maven.plugin.enumcheck;
+package io.github.coderknock.maven.plugin.enumcheck;
 
 import java.util.List;
 
-/**
- * 枚举重复值信息数据模型。
- *
- * <p>当 {@link EnumChecker} 在某个枚举类中检测到有多个常量在同一字段上持有相同值时，
- * 会创建一个 {@code DuplicateInfo} 实例来描述该重复情况，并收集进结果列表供后续报告使用。
- *
- * <h3>示例场景</h3>
- * <pre>{@code
- * public enum StatusEnum {
- *     SUCCESS(200, "成功"),
- *     OK(200, "正常");      // code 字段与 SUCCESS 重复！
- *
- *     private final int code;
- *     private final String desc;
- *     // ...
- * }
- * }</pre>
- *
- * <p>上述情况会生成一个 {@code DuplicateInfo}，其内容为：
- * <ul>
- *   <li>{@code enumClassName}：{@code "com.example.StatusEnum"}</li>
- *   <li>{@code fieldName}：{@code "code"}</li>
- *   <li>{@code value}：{@code 200}</li>
- *   <li>{@code enumConstants}：{@code ["SUCCESS", "OK"]}</li>
- * </ul>
- */
+
 public class DuplicateInfo {
 
     /** 存在重复值的枚举类全限定名，例如 {@code "com.example.StatusEnum"}。 */

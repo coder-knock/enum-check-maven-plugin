@@ -1,8 +1,8 @@
-package com.coderknock.maven.plugin.enumcheck;
+package io.github.coderknock.maven.plugin.enumcheck;
 
-import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
-import com.coderknock.maven.plugin.enumcheck.config.CheckConfiguration;
-import com.coderknock.maven.plugin.enumcheck.config.CheckGroupConfig;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import io.github.coderknock.maven.plugin.enumcheck.config.CheckConfiguration;
+import io.github.coderknock.maven.plugin.enumcheck.config.CheckGroupConfig;
 import org.apache.maven.plugin.logging.Log;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;

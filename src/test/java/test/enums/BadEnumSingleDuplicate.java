@@ -1,6 +1,6 @@
 package test.enums;
 
-import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 /**
  * 单个字段重复，应该被检测出来。

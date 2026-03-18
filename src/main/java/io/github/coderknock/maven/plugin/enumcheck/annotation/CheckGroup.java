@@ -1,4 +1,6 @@
-package com.coderknock.maven.plugin.enumcheck.annotation;
+package io.github.coderknock.maven.plugin.enumcheck.annotation;
+
+import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 /**
  * 组合字段检查分组注解。

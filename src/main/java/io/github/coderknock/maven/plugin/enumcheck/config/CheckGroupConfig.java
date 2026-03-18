@@ -1,6 +1,6 @@
-package com.coderknock.maven.plugin.enumcheck.config;
+package io.github.coderknock.maven.plugin.enumcheck.config;
 
-import com.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;

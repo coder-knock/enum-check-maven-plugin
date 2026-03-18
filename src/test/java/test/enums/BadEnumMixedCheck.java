@@ -1,7 +1,7 @@
 package test.enums;
 
-import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
-import com.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
 
 /**
  * 同时使用单独检查和组合检查，包含多个重复。

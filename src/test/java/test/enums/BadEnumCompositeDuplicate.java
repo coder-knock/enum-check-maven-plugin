@@ -1,7 +1,7 @@
 package test.enums;
 
-import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
-import com.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import io.github.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
 
 /**
  * 组合字段重复，应该被检测出来。
