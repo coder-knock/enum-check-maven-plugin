@@ -1,6 +1,6 @@
 # Maven Enum Check Plugin
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.coderknock/enum-check-maven-plugin.svg)](https://search.maven.org/artifact/io.github.coderknock/enum-check-maven-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.coder-knock/enum-check-maven-plugin.svg)](https://search.maven.org/artifact/io.github.coder-knock/enum-check-maven-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [中文文档](README.md) | English
@@ -307,11 +307,9 @@ mvn clean test
 
 Issues and Pull Requests are welcome!
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contributing guidelines.
+
+This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## 📄 License
 
@@ -326,4 +324,4 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=coderknock/maven-enum-check-plugin&type=Date)](https://star-history.com/#coderknock/maven-enum-check-plugin&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=coder-knock/maven-enum-check-plugin&type=Date)](https://star-history.com/#coder-knock/maven-enum-check-plugin&Date)
