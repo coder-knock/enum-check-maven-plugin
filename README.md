@@ -1,6 +1,6 @@
 # Maven Enum Check Plugin
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.coder-knock/enum-check-maven-plugin.svg)](https://search.maven.org/artifact/io.github.coderknock/enum-check-maven-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.coder-knock/enum-check-maven-plugin.svg)](https://search.maven.org/artifact/io.github.coder-knock/enum-check-maven-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 中文 | [English](README-EN.md)
@@ -307,11 +307,9 @@ mvn clean test
 
 欢迎提交 Issue 和 Pull Request！
 
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启一个 Pull Request
+详细的贡献指南请查看 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+本项目遵循 [Contributor Covenant 行为准则](CODE_OF_CONDUCT.md)。
 
 ## 📄 许可证
 
@@ -326,4 +324,4 @@ MIT License - 查看 [LICENSE](LICENSE) 文件了解详情。
 
 ## ⭐ Star 历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=coderknock/maven-enum-check-plugin&type=Date)](https://star-history.com/#coderknock/maven-enum-check-plugin&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=coder-knock/maven-enum-check-plugin&type=Date)](https://star-history.com/#coder-knock/maven-enum-check-plugin&Date)
