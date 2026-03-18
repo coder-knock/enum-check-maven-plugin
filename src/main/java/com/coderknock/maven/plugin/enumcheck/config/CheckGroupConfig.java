@@ -1,4 +1,6 @@
-package io.github.coderknock.maven.plugin.enumcheck.config;
+package com.coderknock.maven.plugin.enumcheck.config;
+
+import com.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +9,7 @@ import java.util.List;
 /**
  * 单个组合检查分组的配置。
  * <p>
- * 对应 {@link io.github.coderknock.maven.plugin.enumcheck.annotation.CheckGroup CheckGroup}
+ * 对应 {@link CheckGroup CheckGroup}
  * 注解，包含该分组需要检查的字段列表。
  */
 public class CheckGroupConfig {

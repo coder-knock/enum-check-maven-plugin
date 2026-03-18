@@ -1,4 +1,4 @@
-package io.github.coderknock.maven.plugin.enumcheck;
+package com.coderknock.maven.plugin.enumcheck;
 
 import java.util.List;
 

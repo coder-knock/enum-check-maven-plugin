@@ -1,9 +1,8 @@
-package io.github.coderknock.maven.plugin.enumcheck;
+package com.coderknock.maven.plugin.enumcheck;
 
-import io.github.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
-import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
-import io.github.coderknock.maven.plugin.enumcheck.config.CheckConfiguration;
-import io.github.coderknock.maven.plugin.enumcheck.config.CheckGroupConfig;
+import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import com.coderknock.maven.plugin.enumcheck.config.CheckConfiguration;
+import com.coderknock.maven.plugin.enumcheck.config.CheckGroupConfig;
 import org.apache.maven.plugin.logging.Log;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;
@@ -11,7 +10,6 @@ import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.FileVisitResult;

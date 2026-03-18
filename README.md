@@ -61,7 +61,7 @@
 检查 `code` 字段的每个值必须唯一：
 
 ```java
-import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 @EnumCheck({"code"})
 public enum Status {
@@ -104,11 +104,11 @@ public enum Role {
 检查多个字段的组合必须唯一（例如 `type + code` 组合唯一）：
 
 ```java
-import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
-import io.github.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
+import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
+import com.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
 
 @EnumCheck(
-    groups = @CheckGroup(fields = {"type", "code"})
+        groups = @CheckGroup(fields = {"type", "code"})
 )
 public enum Product {
     FOOD(1, 100),

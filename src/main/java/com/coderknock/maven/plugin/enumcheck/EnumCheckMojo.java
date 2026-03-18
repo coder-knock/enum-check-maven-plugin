@@ -1,4 +1,4 @@
-package io.github.coderknock.maven.plugin.enumcheck;
+package com.coderknock.maven.plugin.enumcheck;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

@@ -1,8 +1,8 @@
 package test;
 
-import io.github.coderknock.maven.plugin.enumcheck.CompositeDuplicateInfo;
-import io.github.coderknock.maven.plugin.enumcheck.DuplicateInfo;
-import io.github.coderknock.maven.plugin.enumcheck.SourceEnumChecker;
+import com.coderknock.maven.plugin.enumcheck.CompositeDuplicateInfo;
+import com.coderknock.maven.plugin.enumcheck.DuplicateInfo;
+import com.coderknock.maven.plugin.enumcheck.SourceEnumChecker;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

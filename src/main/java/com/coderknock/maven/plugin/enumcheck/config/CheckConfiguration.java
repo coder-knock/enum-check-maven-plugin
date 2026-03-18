@@ -1,4 +1,6 @@
-package io.github.coderknock.maven.plugin.enumcheck.config;
+package com.coderknock.maven.plugin.enumcheck.config;
+
+import com.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +9,7 @@ import java.util.List;
 /**
  * 单个枚举类的检查配置。
  * <p>
- * 从 {@link io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck EnumCheck}
+ * 从 {@link EnumCheck EnumCheck}
  * 注解中解析出检查规则，封装为这个配置对象，供后续检查使用。
  */
 public class CheckConfiguration {
