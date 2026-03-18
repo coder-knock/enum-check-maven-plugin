@@ -176,17 +176,53 @@ public enum DisabledEnum {
 
 ### 3. 运行检查
 
-插件默认绑定到 `process-classes` 生命周期阶段，在 `mvn compile` 或 `mvn package` 时会自动执行：
+插件默认绑定到 `process-classes` 生命周期阶段，在 `mvn process-classes` 或 `mvn package` 时会自动执行：
 
 ```bash
-mvn compile
+mvn process-classes
 ```
 
 也可以手动执行：
 
 ```bash
-mvn process-classes enum-check:check
+mvn enum-check:check
 ```
+
+如果你只想编译并运行检查：
+
+```bash
+mvn compile enum-check:check
+```
+
+### 在 compile 阶段自动执行
+
+如果你希望插件在 `mvn compile` 时就自动执行，可以显式指定绑定到 `compile` 阶段：
+
+```xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>io.github.coderknock</groupId>
+      <artifactId>enum-check-maven-plugin</artifactId>
+      <version>2.0.0</version>
+      <executions>
+        <execution>
+          <phase>compile</phase>
+          <goals>
+            <goal>check</goal>
+          </goals>
+        </execution>
+      </executions>
+      <configuration>
+        <failOnError>true</failOnError>
+        <scanSubmodules>true</scanSubmodules>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+```
+
+配置后，执行 `mvn compile` 就会自动运行枚举检查了。
 
 ## ⚙️ 配置参数
 
