@@ -46,14 +46,29 @@ public class CheckConfiguration {
     // Getter
     // -------------------------------------------------------------------------
 
+    /**
+     * 返回是否启用检查。
+     *
+     * @return true 表示启用，false 表示跳过该枚举
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * 返回所有需要单独检查的字段名称列表。
+     *
+     * @return 不可修改的字段名称列表
+     */
     public List<String> getSingleFields() {
         return singleFields;
     }
 
+    /**
+     * 返回所有组合检查分组配置列表。
+     *
+     * @return 不可修改的分组配置列表
+     */
     public List<CheckGroupConfig> getGroupConfigs() {
         return groupConfigs;
     }

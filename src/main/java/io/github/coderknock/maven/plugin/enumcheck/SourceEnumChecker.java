@@ -524,13 +524,27 @@ public class SourceEnumChecker {
      * 这样可以确保加载的是目标项目刚编译出来的最新版本。
      */
     private class EnumCheckClassLoader extends ClassLoader {
+        /** 编译输出根目录 */
         private final Path baseDir;
 
+        /**
+         * 创建自定义类加载器。
+         *
+         * @param baseDir 编译输出根目录
+         * @param parent  父类加载器（委托父加载器加载系统类）
+         */
         public EnumCheckClassLoader(Path baseDir, ClassLoader parent) {
             super(parent);
             this.baseDir = baseDir;
         }
 
+        /**
+         * 查找并加载类，优先从编译输出目录读取 .class 文件。
+         *
+         * @param name 全限定类名
+         * @return 定义好的类对象
+         * @throws ClassNotFoundException 类文件不存在或读取失败
+         */
         @Override
         protected Class<?> findClass(String name) throws ClassNotFoundException {
             // 将全限定名转换为 .class 文件路径
@@ -559,16 +573,32 @@ public class SourceEnumChecker {
         private final List<DuplicateInfo> singleDuplicates;
         private final List<CompositeDuplicateInfo> compositeDuplicates;
 
+        /**
+         * 创建一个检查结果实例。
+         *
+         * @param singleDuplicates    单独字段重复信息列表
+         * @param compositeDuplicates 组合字段重复信息列表
+         */
         public CheckResult(List<DuplicateInfo> singleDuplicates,
                            List<CompositeDuplicateInfo> compositeDuplicates) {
             this.singleDuplicates = singleDuplicates;
             this.compositeDuplicates = compositeDuplicates;
         }
 
+        /**
+         * 获取所有单独字段重复信息。
+         *
+         * @return 不可修改的单独字段重复信息列表
+         */
         public List<DuplicateInfo> getSingleDuplicates() {
             return Collections.unmodifiableList(singleDuplicates);
         }
 
+        /**
+         * 获取所有组合字段重复信息。
+         *
+         * @return 不可修改的组合字段重复信息列表
+         */
         public List<CompositeDuplicateInfo> getCompositeDuplicates() {
             return Collections.unmodifiableList(compositeDuplicates);
         }
