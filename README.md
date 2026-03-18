@@ -1,7 +1,9 @@
 # Maven Enum Check Plugin
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.coderknock/enum-check-maven-plugin.svg)](https://search.maven.org/artifact/io.github.coderknock/enum-check-maven-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.coder-knock/enum-check-maven-plugin.svg)](https://search.maven.org/artifact/io.github.coderknock/enum-check-maven-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+中文 | [English](README-EN.md)
 
 一个 Maven 插件，用于在编译阶段检查 Java 枚举（Enum）中指定字段的重复值，帮助你提前发现业务代码中的枚举常量定义错误。
 
