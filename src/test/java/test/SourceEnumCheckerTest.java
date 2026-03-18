@@ -3,6 +3,7 @@ package test;
 import com.coderknock.maven.plugin.enumcheck.CompositeDuplicateInfo;
 import com.coderknock.maven.plugin.enumcheck.DuplicateInfo;
 import com.coderknock.maven.plugin.enumcheck.SourceEnumChecker;
+import com.google.inject.internal.util.Lists;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -117,8 +118,8 @@ class SourceEnumCheckerTest {
 
         CompositeDuplicateInfo duplicate = result.getCompositeDuplicates().get(0);
         assertEquals("test.enums.BadEnumCompositeDuplicate", duplicate.getEnumClassName());
-        assertEquals(List.of("type", "code"), duplicate.getFieldNames());
-        assertEquals(List.of(1, 100), duplicate.getValues());
+        assertEquals(Lists.newArrayList("type", "code"), duplicate.getFieldNames());
+        assertEquals(Lists.newArrayList(1, 100), duplicate.getValues());
         assertEquals(2, duplicate.getEnumConstants().size());
         assertTrue(duplicate.getEnumConstants().contains("FOOD"));
         assertTrue(duplicate.getEnumConstants().contains("DRINK"));
@@ -152,12 +153,12 @@ class SourceEnumCheckerTest {
 
         // 验证第一个组合重复 (1, electronics)
         boolean foundFirst = result.getCompositeDuplicates().stream()
-                .anyMatch(d -> d.getValues().equals(List.of(1, "electronics")));
+                .anyMatch(d -> d.getValues().equals(Lists.newArrayList(1, "electronics")));
         assertTrue(foundFirst);
 
         // 验证第二个组合重复 (2, clothing)
         boolean foundSecond = result.getCompositeDuplicates().stream()
-                .anyMatch(d -> d.getValues().equals(List.of(2, "clothing")));
+                .anyMatch(d -> d.getValues().equals(Lists.newArrayList(2, "clothing")));
         assertTrue(foundSecond);
     }
 
