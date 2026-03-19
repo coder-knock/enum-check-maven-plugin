@@ -131,32 +131,32 @@ public class EnumCheckMojo extends AbstractMojo {
         getLog().info("============================================");
         getLog().info("开始注解驱动枚举重复值检查...");
 
-        // 收集所有需要扫描的源码目录
-        List<File> sourceRoots = collectSourceRoots();
-        getLog().info("将扫描 " + sourceRoots.size() + " 个源码目录");
-
-        File outputDirectory = new File(project.getBuild().getOutputDirectory());
-        if (!outputDirectory.exists()) {
-            getLog().warn("编译输出目录不存在: " + outputDirectory +
-                    " 请确保项目已编译。");
-        } else {
-            getLog().debug("使用编译输出目录: " + outputDirectory);
-        }
+        // 收集所有需要扫描的源码目录（包含对应的输出目录）
+        List<SourceRootWithOutput> sourceRootsWithOutput = collectSourceRootsWithOutput();
+        getLog().info("将扫描 " + sourceRootsWithOutput.size() + " 个源码目录");
 
         try {
-            SourceEnumChecker checker = new SourceEnumChecker(
-                    outputDirectory.toPath(), getLog());
-
             List<DuplicateInfo> allSingleDuplicates = new ArrayList<>();
             List<CompositeDuplicateInfo> allCompositeDuplicates = new ArrayList<>();
 
             // 扫描所有收集到的源码目录
-            for (File sourceRoot : sourceRoots) {
+            for (SourceRootWithOutput sourceRootPair : sourceRootsWithOutput) {
+                File sourceRoot = sourceRootPair.getSourceRoot();
+                File outputDirectory = sourceRootPair.getOutputDir();
+
                 if (!sourceRoot.exists()) {
                     getLog().debug("源码目录不存在，跳过: " + sourceRoot);
                     continue;
                 }
-                getLog().debug("扫描源码目录: " + sourceRoot);
+                if (!outputDirectory.exists()) {
+                    getLog().warn("编译输出目录不存在: " + outputDirectory +
+                            " 请确保项目已编译。");
+                    continue;
+                }
+                getLog().debug("扫描源码目录: " + sourceRoot + " (输出: " + outputDirectory + ")");
+
+                SourceEnumChecker checker = new SourceEnumChecker(
+                        outputDirectory.toPath(), getLog());
                 SourceEnumChecker.CheckResult result = checker.checkDirectory(sourceRoot.toPath());
                 allSingleDuplicates.addAll(result.getSingleDuplicates());
                 allCompositeDuplicates.addAll(result.getCompositeDuplicates());
@@ -266,7 +266,7 @@ public class EnumCheckMojo extends AbstractMojo {
         @SuppressWarnings("unchecked")
         List<MavenProject> modules = proj.getCollectedProjects();
         if (modules != null && !modules.isEmpty()) {
-            for (MavenModule module : modules) {
+            for (MavenProject module : modules) {
                 addMainSourceRootsWithOutput(module, result);
                 // 递归处理子模块的子模块（支持多级嵌套）
                 collectSubmoduleSourceRootsWithOutput(module, result);
