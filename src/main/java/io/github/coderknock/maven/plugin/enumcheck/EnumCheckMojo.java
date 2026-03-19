@@ -15,14 +15,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Core Mojo for Maven enum duplicate value check plugin (annotation-driven version).
+ * Maven 枚举重复值检查插件的核心 Mojo（注解驱动版本）。
  * <p>
- * Binds to the {@code process-classes} phase by default (after {@code compile}),
- * when all {@code .class} files have been generated and compilation is complete.
- * The plugin uses JBoss Forge Roaster to parse source code, and only checks
- * enum classes annotated with {@code @EnumCheck}.
+ * 默认绑定到 {@code process-classes} 阶段（即 {@code compile} 之后），
+ * 此时 .class 文件已全部生成，源码也编译完成。
+ * 插件使用 JBoss Forge Roaster 解析源码，只检查带有 {@code @EnumCheck}
+ * 注解的枚举类。
  *
- * <h3>Usage Example (configure in target project's pom.xml)</h3>
+ * <h3>使用示例（在目标项目的 pom.xml 中配置）</h3>
  * <pre>{@code
  * <plugin>
  *   <groupId>io.github.coderknock</groupId>
@@ -34,14 +34,14 @@ import java.util.stream.Collectors;
  *     </execution>
  *   </executions>
  *   <configuration>
- *     <!-- Fail the build when duplicates are found (default: true) -->
+ *     <!-- 发现重复时让构建失败（默认 true） -->
  *     <failOnError>true</failOnError>
- *     <!-- Whether to scan all submodules (default: true) -->
+ *     <!-- 是否扫描所有子模块（默认 true） -->
  *     <scanSubmodules>true</scanSubmodules>
  *   </configuration>
  * </plugin>
  *
- * Then add the annotation configuration to your enum:
+ * 然后在你的枚举上添加注解配置：
  *
  * import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
  *
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  * }
  * }</pre>
  *
- * <p>Composite field checking is also supported:
+ * <p>支持组合字段检查：
  * <pre>{@code
  * import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
  * import io.github.coderknock.maven.plugin.enumcheck.annotation.CheckGroup;
@@ -70,7 +70,7 @@ import java.util.stream.Collectors;
  * }
  * }</pre>
  *
- * <p>Can also be executed from command line:
+ * <p>也可以通过命令行执行：
  * {@code mvn process-classes enum-check:check}
  *
  * @author coderknock
@@ -80,193 +80,168 @@ import java.util.stream.Collectors;
 public class EnumCheckMojo extends AbstractMojo {
 
     /**
-     * Current Maven project (injected automatically by Maven).
-     * <p>Used to collect source directories of the current project
-     * and all submodules.
+     * 当前 Maven 项目（由 Maven 自动注入）。
+     * <p>用于收集当前项目和所有子模块的源码目录。
      */
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
     /**
-     * Whether to fail the build when duplicate values are found.
+     * 发现重复值时是否让构建失败。
      * <ul>
-     *   <li>{@code true} (default): Throws {@link MojoFailureException} and aborts the build</li>
-     *   <li>{@code false}: Only prints warnings and allows the build to continue</li>
+     *   <li>{@code true}（默认）：发现重复则抛出 {@link MojoFailureException}，构建中止</li>
+     *   <li>{@code false}：仅打印警告，构建继续</li>
      * </ul>
-     * <p>Can be overridden from command line: {@code -Denumcheck.failOnError=false}
+     * <p>命令行覆盖：{@code -Denumcheck.failOnError=false}
      */
     @Parameter(defaultValue = "true", property = "enumcheck.failOnError")
     private boolean failOnError;
 
     /**
-     * Whether to scan all submodules.
-     * <p>If the project is multi-module, whether to recursively scan
-     * source code in all submodules.
+     * 是否扫描所有子模块。
+     * <p>如果项目是多模块项目，是否递归扫描所有子模块的源码。
      * <ul>
-     *   <li>{@code true} (default): Scan the main project plus all submodules</li>
-     *   <li>{@code false}: Only scan the current project</li>
+     *   <li>{@code true}（默认）：扫描主项目加上所有子模块</li>
+     *   <li>{@code false}：只扫描当前项目</li>
      * </ul>
-     * <p>Can be overridden from command line: {@code -Denumcheck.scanSubmodules=false}
+     * <p>命令行覆盖：{@code -Denumcheck.scanSubmodules=false}
      */
     @Parameter(defaultValue = "true", property = "enumcheck.scanSubmodules")
     private boolean scanSubmodules;
 
     // -------------------------------------------------------------------------
-    // Mojo Entry Point
+    // Mojo 入口
     // -------------------------------------------------------------------------
 
     /**
-     * Plugin execution entry point, automatically called by Maven
-     * during the {@code process-classes} phase.
-     * <p>Execution flow:
+     * 插件执行入口，由 Maven 在 {@code process-classes} 阶段自动调用。
+     * <p>执行流程：
      * <ol>
-     *   <li>Collect source directories to scan (current project + all submodules)</li>
-     *   <li>Use {@link SourceEnumChecker} to scan and check each source directory</li>
-     *   <li>Collect all duplicates and print a detailed report</li>
-     *   <li>Determine build result based on {@code failOnError}</li>
+     *   <li>收集需要扫描的源码目录（当前项目 + 所有子模块）</li>
+     *   <li>对每个源码目录，使用 {@link SourceEnumChecker} 扫描检查</li>
+     *   <li>收集所有重复值，打印详细报告</li>
+     *   <li>根据 {@code failOnError} 决定构建结果</li>
      * </ol>
      *
-     * @throws MojoExecutionException System-level problems like I/O errors
-     * @throws MojoFailureException   Duplicates found and failOnError=true
+     * @throws MojoExecutionException I/O 错误等系统级问题
+     * @throws MojoFailureException   发现重复且 failOnError=true
      */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("============================================");
-        getLog().info("Starting annotation-driven enum duplicate check...");
+        getLog().info("开始注解驱动枚举重复值检查...");
 
-        // Collect all source directories to scan
-        List<File> sourceRoots = collectSourceRoots();
-        getLog().info("Will scan " + sourceRoots.size() + " source director" +
-                (sourceRoots.size() > 1 ? "ies" : "y"));
-
-        File outputDirectory = new File(project.getBuild().getOutputDirectory());
-        if (!outputDirectory.exists()) {
-            getLog().warn("Compiled output directory does not exist: " + outputDirectory +
-                    " - please ensure the project has been compiled.");
-        } else {
-            getLog().debug("Using compiled output directory: " + outputDirectory);
-        }
+        // 收集所有需要扫描的源码目录（包含对应的输出目录）
+        List<SourceRootWithOutput> sourceRootsWithOutput = collectSourceRootsWithOutput();
+        getLog().info("将扫描 " + sourceRootsWithOutput.size() + " 个源码目录");
 
         try {
-            SourceEnumChecker checker = new SourceEnumChecker(
-                    outputDirectory.toPath(), getLog());
-
             List<DuplicateInfo> allSingleDuplicates = new ArrayList<>();
             List<CompositeDuplicateInfo> allCompositeDuplicates = new ArrayList<>();
 
-            // Scan all collected source directories
-            for (File sourceRoot : sourceRoots) {
+            // 扫描所有收集到的源码目录
+            for (SourceRootWithOutput sourceRootPair : sourceRootsWithOutput) {
+                File sourceRoot = sourceRootPair.getSourceRoot();
+                File outputDirectory = sourceRootPair.getOutputDir();
+
                 if (!sourceRoot.exists()) {
-                    getLog().debug("Source directory does not exist, skipping: " + sourceRoot);
+                    getLog().debug("源码目录不存在，跳过: " + sourceRoot);
                     continue;
                 }
-                getLog().debug("Scanning source directory: " + sourceRoot);
+                if (!outputDirectory.exists()) {
+                    getLog().warn("编译输出目录不存在: " + outputDirectory +
+                            " 请确保项目已编译。");
+                    continue;
+                }
+                getLog().debug("扫描源码目录: " + sourceRoot + " (输出: " + outputDirectory + ")");
+
+                SourceEnumChecker checker = new SourceEnumChecker(
+                        outputDirectory.toPath(), getLog());
                 SourceEnumChecker.CheckResult result = checker.checkDirectory(sourceRoot.toPath());
                 allSingleDuplicates.addAll(result.getSingleDuplicates());
                 allCompositeDuplicates.addAll(result.getCompositeDuplicates());
             }
 
-            // Process check results
+            // 检查结果处理
             if (allSingleDuplicates.isEmpty() && allCompositeDuplicates.isEmpty()) {
-                getLog().info("Check complete, no duplicate enum values found.");
+                getLog().info("检查完成，未发现重复枚举值。");
                 getLog().info("============================================");
                 return;
             }
 
-            // Print detailed error report
+            // 打印详细错误报告
             String errorMessage = formatErrorMessage(allSingleDuplicates, allCompositeDuplicates);
             getLog().error(errorMessage);
 
             int total = allSingleDuplicates.size() + allCompositeDuplicates.size();
-            getLog().info("Found " + total + " duplicate entr" +
-                    (total > 1 ? "ies" : "y") + " in total.");
+            getLog().info("共发现 " + total + " 处重复值。");
 
             if (failOnError) {
                 throw new MojoFailureException(
-                        "Found " + total + " duplicate enum value" +
-                                (total > 1 ? "s" : "") + ", build failed.");
+                        "发现 " + total + " 处枚举重复值，构建失败。");
             } else {
-                getLog().warn("Since failOnError=false, build continues despite duplicates.");
+                getLog().warn("由于 failOnError=false，尽管存在重复，构建继续。");
             }
 
             getLog().info("============================================");
 
         } catch (IOException e) {
-            throw new MojoExecutionException("I/O error occurred while scanning source code", e);
+            throw new MojoExecutionException("扫描源码时发生 I/O 错误", e);
         }
     }
 
     // -------------------------------------------------------------------------
-    // Collect Source Directories (supports multi-module projects)
+    // 收集源码目录（支持多模块）
     // -------------------------------------------------------------------------
 
     /**
-     * Holds a pairing of source root directory and corresponding compiled output directory.
+     * 保存源码目录和对应的编译输出目录的配对。
      */
     private static class SourceRootWithOutput {
         private final File sourceRoot;
         private final File outputDir;
 
-        /**
-         * Create a new SourceRootWithOutput pairing.
-         *
-         * @param sourceRoot Source root directory
-         * @param outputDir  Compiled output directory
-         */
         public SourceRootWithOutput(File sourceRoot, File outputDir) {
             this.sourceRoot = sourceRoot;
             this.outputDir = outputDir;
         }
 
-        /**
-         * Get the source root directory.
-         *
-         * @return Source root directory
-         */
         public File getSourceRoot() {
             return sourceRoot;
         }
 
-        /**
-         * Get the compiled output directory.
-         *
-         * @return Compiled output directory
-         */
         public File getOutputDir() {
             return outputDir;
         }
     }
 
     /**
-     * Collect all source directories that need to be scanned along with their
-     * corresponding compiled output directories.
-     * <p>If {@link #scanSubmodules} is true, recursively collects source roots
-     * from the current project and all its submodules.
+     * 收集所有需要扫描的源码目录及其对应的编译输出目录。
+     * <p>如果 {@link #scanSubmodules} 为 true，则递归收集当前项目
+     * 以及所有子模块的编译源码根目录。
      *
-     * @return List of (source directory, output directory) pairs to scan
+     * @return 所有需要扫描的(源码目录, 输出目录)配对列表
      */
     private List<SourceRootWithOutput> collectSourceRootsWithOutput() {
         List<SourceRootWithOutput> result = new ArrayList<>();
 
-        // Add main source roots of the current project
+        // 添加当前项目的主源码目录
         addMainSourceRootsWithOutput(project, result);
 
-        // If submodule scanning is enabled, add all submodules
+        // 如果启用了扫描子模块，则添加所有子模块
         if (scanSubmodules) {
             collectSubmoduleSourceRootsWithOutput(project, result);
         }
 
-        getLog().debug("Collected " + result.size() + " source director" +
-                (result.size() > 1 ? "ies" : "y") + " in total");
+        getLog().debug("共收集到 " + result.size() + " 个源码目录");
         return result;
     }
 
     /**
-     * Add the main source roots of the given project to the result list,
-     * while recording the corresponding output directory.
+     * 将给定项目的主源码目录添加到列表中，同时记录对应的输出目录。
      *
-     * @param proj   The Maven project
-     * @param result Result list to add to
+     * @param proj   项目
+     * @param result 结果列表
      */
     private void addMainSourceRootsWithOutput(MavenProject proj, List<SourceRootWithOutput> result) {
         @SuppressWarnings("unchecked")
@@ -276,17 +251,16 @@ public class EnumCheckMojo extends AbstractMojo {
             File rootFile = new File(root);
             if (rootFile.exists()) {
                 result.add(new SourceRootWithOutput(rootFile, outputDir));
-                getLog().debug("Added source directory: " + rootFile.getAbsolutePath() +
-                        " -> " + outputDir.getAbsolutePath());
+                getLog().debug("添加源码目录: " + rootFile.getAbsolutePath() + " -> " + outputDir.getAbsolutePath());
             }
         }
     }
 
     /**
-     * Recursively collect source directories and output directories from all submodules.
+     * 递归收集所有子模块的源码目录和输出目录。
      *
-     * @param proj   Current project
-     * @param result Result list to add to
+     * @param proj   当前项目
+     * @param result 结果列表
      */
     private void collectSubmoduleSourceRootsWithOutput(MavenProject proj, List<SourceRootWithOutput> result) {
         @SuppressWarnings("unchecked")
@@ -294,77 +268,55 @@ public class EnumCheckMojo extends AbstractMojo {
         if (modules != null && !modules.isEmpty()) {
             for (MavenProject module : modules) {
                 addMainSourceRootsWithOutput(module, result);
-                // Recursively process submodules of submodules (supports nested multi-level)
+                // 递归处理子模块的子模块（支持多级嵌套）
                 collectSubmoduleSourceRootsWithOutput(module, result);
             }
         }
     }
 
     // -------------------------------------------------------------------------
-    // Error Report Formatting
+    // 错误报告格式化
     // -------------------------------------------------------------------------
 
     /**
-     * Format the error report, organizing all duplicate information into
-     * a human-readable format.
+     * 格式化错误报告，将所有重复信息整理为可读格式。
      *
-     * @param singleDuplicates    List of single-field duplicates
-     * @param compositeDuplicates List of composite-field duplicates
-     * @return Formatted multi-line report
+     * @param singleDuplicates    单独字段重复列表
+     * @param compositeDuplicates 组合字段重复列表
+     * @return 格式化的多行报告
      */
     private String formatErrorMessage(List<DuplicateInfo> singleDuplicates,
             List<CompositeDuplicateInfo> compositeDuplicates) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
-        sb.append("Found duplicate enum values:\n");
+        sb.append("发现枚举重复值：\n");
         sb.append("============================================\n");
         sb.append("\n");
 
         int count = 1;
 
-        // Output single-field duplicates
+        // 输出单独字段重复
         for (DuplicateInfo dup : singleDuplicates) {
-            sb.append(String.format("%d. Enum class: %s%n", count++, dup.getEnumClassName()));
-            sb.append(String.format("   Field:     %s%n", dup.getFieldName()));
-            sb.append(String.format("   Value:     %s%n", dup.getValue()));
-            sb.append(String.format("   Occurs in: %s%n",
+            sb.append(String.format("%d. 枚举类: %s%n", count++, dup.getEnumClassName()));
+            sb.append(String.format("   字段:    %s%n", dup.getFieldName()));
+            sb.append(String.format("   重复值:  %s%n", dup.getValue()));
+            sb.append(String.format("   出现于:  %s%n",
                     dup.getEnumConstants().stream().collect(Collectors.joining(", "))));
             sb.append("\n");
         }
 
-        // Output composite-field duplicates
+        // 输出组合字段重复
         for (CompositeDuplicateInfo dup : compositeDuplicates) {
-            sb.append(String.format("%d. Enum class: %s%n", count++, dup.getEnumClassName()));
-            sb.append(String.format("   Fields:    %s%n", dup.formatFieldNames()));
-            sb.append(String.format("   Value:     %s%n", dup.formatValues()));
-            sb.append(String.format("   Occurs in: %s%n",
+            sb.append(String.format("%d. 枚举类: %s%n", count++, dup.getEnumClassName()));
+            sb.append(String.format("   字段组合: %s%n", dup.formatFieldNames()));
+            sb.append(String.format("   重复值:  %s%n", dup.formatValues()));
+            sb.append(String.format("   出现于:  %s%n",
                     dup.getEnumConstants().stream().collect(Collectors.joining(", "))));
             sb.append("\n");
         }
 
         int total = singleDuplicates.size() + compositeDuplicates.size();
-        sb.append("Total: ").append(total).append(" duplicate entr").append(total > 1 ? "ies" : "y").append(".\n");
+        sb.append("合计: ").append(total).append(" 处重复值。\n");
         return sb.toString();
-    }
-
-    /**
-     * Collect all source roots from the current project.
-     * <p>This is a simplified version that just returns the main compile
-     * source roots from the current project. For multi-module projects with
-     * submodule scanning enabled, use {@link #collectSourceRootsWithOutput()} instead.
-     *
-     * @return List of source root directories to scan
-     */
-    private List<File> collectSourceRoots() {
-        List<File> result = new ArrayList<>();
-        @SuppressWarnings("unchecked")
-        List<String> compileSourceRoots = project.getCompileSourceRoots();
-        for (String root : compileSourceRoots) {
-            File rootFile = new File(root);
-            if (rootFile.exists()) {
-                result.add(rootFile);
-            }
-        }
-        return result;
     }
 }
