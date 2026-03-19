@@ -2,82 +2,91 @@ package io.github.coderknock.maven.plugin.enumcheck.annotation;
 
 
 /**
- * 枚举重复值检查标记注解。
+ * Enum duplicate value check marker annotation.
  * <p>
- * 只有添加了此注解的枚举类才会被插件扫描检查。
- * 你可以通过此注解直接配置需要检查的字段：
+ * Only enum classes annotated with this annotation will be scanned
+ * and checked by the plugin. You can configure which fields to check
+ * directly through this annotation:
  * <ul>
- *   <li>{@code value}：单独指定需要检查的字段，每个字段单独验重</li>
- *   <li>{@code groups}：指定组合检查分组，每组内多个字段组合起来必须唯一</li>
+ *   <li>{@code value}: Specify fields to be checked individually,
+ *       each field must have a unique value by itself</li>
+ *   <li>{@code groups}: Specify composite check groups, the combination
+ *       of fields within each group must be unique</li>
  * </ul>
  * <p>
- * 使用示例 1：单独检查多个字段，每个字段各自保证唯一
+ * Usage example 1: Check multiple fields individually, each field
+ * must guarantee its own uniqueness:
  * <pre>{@code
  * @EnumCheck({"code", "name"})
  * public enum StatusEnum {
- *     SUCCESS(200, "成功"),
- *     ERROR(500, "错误");
+ *     SUCCESS(200, "success"),
+ *     ERROR(500, "error");
  *     // ...
  * }
  * }</pre>
  * <p>
- * 使用示例 2：组合字段检查，多个字段组合必须唯一
+ * Usage example 2: Composite field checking, the combination of multiple
+ * fields must be unique:
  * <pre>{@code
  * @EnumCheck(
  *     groups = {
- *         @CheckGroup(fields = {"type", "code"}),  // type + code 组合必须唯一
- *         @CheckGroup(fields = {"name"})           // name 单独检查必须唯一
+ *         @CheckGroup(fields = {"type", "code"}),  // type + code combination must be unique
+ *         @CheckGroup(fields = {"name"})           // name alone must be unique
  *     }
  * )
  * public enum ProductEnum {
- *     FOOD(1, 100, "食物"),
- *     DRINK(1, 101, "饮料"),
- *     CLOTH(2, 100, "服装");  // type + code = (2, 100) 不重复，可以通过
+ *     FOOD(1, 100, "food"),
+ *     DRINK(1, 101, "drink"),
+ *     CLOTH(2, 100, "cloth");  // type + code = (2, 100) is unique, passes
  *     // ...
  * }
  * }</pre>
  * <p>
- * 使用示例 3：同时使用单独检查和组合检查
+ * Usage example 3: Using both individual and composite checks together:
  * <pre>{@code
  * @EnumCheck(
- *     value = "code",       // code 单独必须唯一
- *     groups = @CheckGroup(fields = {"type", "name"})  // type + name 组合必须唯一
+ *     value = "code",       // code alone must be unique
+ *     groups = @CheckGroup(fields = {"type", "name"})  // type + name combination must be unique
  * )
  * public enum MyEnum { ... }
  * }</pre>
  * <p>
- * 如果既不指定 {@code value} 也不指定 {@code groups}，
- * 默认检查枚举类中所有非静态实例字段（每个字段单独验重）。
+ * If neither {@code value} nor {@code groups} is specified, the plugin
+ * defaults to checking all non-static instance fields in the enum class
+ * (each field is checked individually for uniqueness).
  */
 public @interface EnumCheck {
 
     /**
-     * 需要单独检查的字段名称数组。
+     * Array of field names to check individually.
      * <p>
-     * 数组中的每个字段会被独立检查，要求该字段的值在所有枚举常量中唯一。
-     * 如果不需要单独检查任何字段，可以留空。
+     * Each field in the array will be checked independently, requiring
+     * that the value of this field is unique among all enum constants.
+     * Leave empty if you don't need any individual checking.
      *
-     * @return 需要单独检查的字段名称数组
+     * @return Array of field names to check individually
      */
     String[] value() default {};
 
     /**
-     * 需要组合检查的分组数组。
+     * Array of composite check groups.
      * <p>
-     * 每个 {@link CheckGroup} 定义一组字段，这组字段的值组合起来必须唯一。
-     * 不同分组之间独立检查互不影响。
-     * 如果不需要组合检查，可以留空。
+     * Each {@link CheckGroup} defines a group of fields, and the
+     * combination of values from these fields must be unique.
+     * Different groups are checked independently of each other.
+     * Leave empty if you don't need any composite checking.
      *
-     * @return 组合检查分组数组
+     * @return Array of composite check groups
      */
     CheckGroup[] groups() default {};
 
     /**
-     * 是否启用检查。
+     * Whether this check is enabled.
      * <p>
-     * 可以通过设置此参数为 {@code false} 来临时禁用某个枚举的检查。
+     * You can temporarily disable checking for a specific enum by
+     * setting this parameter to {@code false}.
      *
-     * @return true 表示启用检查（默认），false 表示跳过该枚举
+     * @return true enables checking (default), false skips this enum
      */
     boolean enabled() default true;
 }

@@ -4,56 +4,57 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 组合字段重复值信息数据模型。
+ * Data model holding information about a composite field duplicate.
  * <p>
- * 当检测到多个枚举常量在<strong>一组字段</strong>上组合值完全相同时，
- * 创建此实例描述重复情况。
+ * When multiple enum constants have the <strong>same combination</strong>
+ * of values across multiple fields, this instance is created to describe
+ * the duplication.
  * <p>
- * 例如，当 {@code type=1, code=100} 同时出现在多个枚举常量中，
- * 会生成一个 {@code CompositeDuplicateInfo} 记录该重复。
+ * For example, when {@code type=1, code=100} appears in multiple enum
+ * constants, a {@code CompositeDuplicateInfo} is created to record this.
  *
- * <h3>示例场景</h3>
+ * <h3>Example Scenario</h3>
  * <pre>{@code
  * public enum ProductEnum {
- *     FOOD(1, 100, "食物"),
- *     DRINK(1, 100, "饮料");  // type + code = (1, 100) 与 FOOD 重复！
+ *     FOOD(1, 100, "food"),
+ *     DRINK(1, 100, "drink");  // type + code = (1, 100) duplicates FOOD!
  *     // ...
  * }
  * }</pre>
  *
- * <p>上述情况会生成一个 {@code CompositeDuplicateInfo}，内容为：
+ * <p>In this case, a {@code CompositeDuplicateInfo} would be created with:
  * <ul>
- *   <li>{@code enumClassName}：{@code "com.example.ProductEnum"}</li>
- *   <li>{@code fieldNames}：{@code ["type", "code"]}</li>
- *   <li>{@code values}：{@code [1, 100]}</li>
- *   <li>{@code enumConstants}：{@code ["FOOD", "DRINK"]}</li>
+ *   <li>{@code enumClassName}: {@code "com.example.ProductEnum"}</li>
+ *   <li>{@code fieldNames}: {@code ["type", "code"]}</li>
+ *   <li>{@code values}: {@code [1, 100]}</li>
+ *   <li>{@code enumConstants}: {@code ["FOOD", "DRINK"]}</li>
  * </ul>
  */
 public class CompositeDuplicateInfo {
 
-    /** 存在重复值的枚举类全限定名。 */
+    /** Fully qualified name of the enum class that contains the composite duplicate. */
     private final String enumClassName;
 
-    /** 参与组合检查的字段名称列表。 */
+    /** List of field names participating in this composite check. */
     private final List<String> fieldNames;
 
-    /** 重复的组合值列表，顺序与 {@link #fieldNames} 对应。 */
+    /** List of duplicated composite values, in the same order as {@link #fieldNames}. */
     private final List<Object> values;
 
-    /** 共享该组合值的枚举常量名称列表，至少包含 2 个元素。 */
+    /** List of enum constant names that share this composite value, contains at least 2 elements. */
     private final List<String> enumConstants;
 
     // -------------------------------------------------------------------------
-    // 构造器
+    // Constructor
     // -------------------------------------------------------------------------
 
     /**
-     * 创建一个 CompositeDuplicateInfo 实例。
+     * Create a new CompositeDuplicateInfo instance.
      *
-     * @param enumClassName   枚举类全限定名
-     * @param fieldNames      参与组合的字段名称列表
-     * @param values          重复的组合值列表
-     * @param enumConstants   共享该组合值的枚举常量名列表（至少 2 个）
+     * @param enumClassName   Fully qualified name of the enum class
+     * @param fieldNames      List of field names in this composite group
+     * @param values          List of duplicated composite values
+     * @param enumConstants   List of enum constants sharing this composite value (at least 2)
      */
     public CompositeDuplicateInfo(String enumClassName, List<String> fieldNames,
                                    List<Object> values, List<String> enumConstants) {
@@ -68,49 +69,49 @@ public class CompositeDuplicateInfo {
     // -------------------------------------------------------------------------
 
     /**
-     * 返回存在重复值的枚举类全限定名。
+     * Get the fully qualified name of the enum class with duplicates.
      *
-     * @return 枚举类全限定名
+     * @return Fully qualified name of the enum class
      */
     public String getEnumClassName() {
         return enumClassName;
     }
 
     /**
-     * 返回参与组合检查的字段名称列表。
+     * Get the list of field names in this composite check.
      *
-     * @return 字段名称列表，顺序为注解中声明的顺序
+     * @return List of field names in the same order as declared in the annotation
      */
     public List<String> getFieldNames() {
         return fieldNames;
     }
 
     /**
-     * 返回重复的组合值列表。
+     * Get the list of duplicated composite values.
      *
-     * @return 组合值列表，顺序与字段名称列表对应
+     * @return List of composite values in the same order as the field names
      */
     public List<Object> getValues() {
         return values;
     }
 
     /**
-     * 返回共享该组合值的枚举常量名称列表。
+     * Get the list of enum constant names that share this composite value.
      *
-     * @return 枚举常量名列表，至少包含 2 个元素
+     * @return List of enum constant names, contains at least 2 elements
      */
     public List<String> getEnumConstants() {
         return enumConstants;
     }
 
     // -------------------------------------------------------------------------
-    // 工具方法
+    // Utility Methods
     // -------------------------------------------------------------------------
 
     /**
-     * 格式化组合值为可读字符串，形如 "(value1, value2)"。
+     * Format the composite values into a human-readable string like "(value1, value2)".
      *
-     * @return 格式化后的组合值字符串
+     * @return Formatted composite values string
      */
     public String formatValues() {
         StringBuilder sb = new StringBuilder("(");
@@ -125,9 +126,9 @@ public class CompositeDuplicateInfo {
     }
 
     /**
-     * 格式化字段名称为可读字符串，形如 "field1 + field2"。
+     * Format the field names into a human-readable string like "field1 + field2".
      *
-     * @return 格式化后的字段名组合字符串
+     * @return Formatted field names string
      */
     public String formatFieldNames() {
         return String.join(" + ", fieldNames);

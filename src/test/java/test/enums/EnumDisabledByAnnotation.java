@@ -3,13 +3,13 @@ package test.enums;
 import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 /**
- * 虽然有注解但是 enabled = false，应该被跳过。
- * 即使有重复也不会检查。
+ * Although annotated, enabled = false, should be skipped.
+ * Won't check even if there are duplicates.
  */
 @EnumCheck(value = "code", enabled = false)
 public enum EnumDisabledByAnnotation {
     FIRST(100),
-    SECOND(100);  // 这里有重复，但是因为 disabled，不会被检测
+    SECOND(100);  // There's a duplicate here, but since it's disabled, won't be detected
 
     private final int code;
 

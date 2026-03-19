@@ -6,7 +6,7 @@ We love contributions from everyone! Whether you're fixing a bug, adding a featu
 
 ### 1. Fork & Clone
 
-1. Fork the [repository](https://github.com/coder-knock/maven-enum-check-plugin/fork) on GitHub
+1. Fork the [repository](https://github.com/coder-knock/enum-check-maven-plugin/fork) on GitHub
 2. Clone your fork locally:
    ```bash
    git clone https://github.com/<your-username>/maven-enum-check-plugin.git
@@ -14,7 +14,7 @@ We love contributions from everyone! Whether you're fixing a bug, adding a featu
    ```
 3. Add the original repository as an upstream remote:
    ```bash
-   git remote add upstream https://github.com/coder-knock/maven-enum-check-plugin.git
+   git remote add upstream https://github.com/coder-knock/enum-check-maven-plugin.git
    ```
 
 ### 2. Create a Branch
@@ -115,7 +115,7 @@ src/
 
 ### Found a bug?
 
-Please open a [GitHub Issue](https://github.com/coder-knock/maven-enum-check-plugin/issues/new) and include:
+Please open a [GitHub Issue](https://github.com/coder-knock/enum-check-maven-plugin/issues/new) and include:
 
 - A clear description of the bug
 - Steps to reproduce the issue

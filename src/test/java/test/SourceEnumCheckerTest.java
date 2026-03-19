@@ -16,38 +16,38 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@link SourceEnumChecker} 的单元测试。
+ * Unit tests for {@link SourceEnumChecker}.
  * <p>
- * 测试各种场景：
+ * Tests various scenarios:
  * <ul>
- *   <li>无重复的枚举应该通过</li>
- *   <li>单个字段重复应该被检测</li>
- *   <li>组合字段重复应该被检测</li>
- *   <li>同时有单独和组合检查都能工作</li>
- *   <li>disabled=false 应该跳过检查</li>
- *   <li>字符串重复应该被检测</li>
+ *   <li>Enums without duplicates should pass</li>
+ *   <li>Single-field duplicates should be detected</li>
+ *   <li>Composite-field duplicates should be detected</li>
+ *   <li>Both individual and composite checks work together</li>
+ *   <li>enabled=false should skip the check</li>
+ *   <li>String duplicates should be detected</li>
  * </ul>
  */
 class SourceEnumCheckerTest {
 
     /**
-     * 测试源码目录：src/test/java/test/enums
+     * Test source directory: src/test/java/test/enums
      */
     private String testSourceDir;
 
     /**
-     * 编译输出目录：target/test-classes
+     * Compiled output directory: target/test-classes
      */
     private String outputDir;
 
     /**
-     * 日志，使用 Maven 的 SystemStreamLog 输出到控制台
+     * Logger, uses Maven's SystemStreamLog to output to console
      */
     private SystemStreamLog log;
 
     @BeforeEach
     void setUp() {
-        // 获取当前项目的基础目录
+        // Get the base directory of the current project
         String baseDir = System.getProperty("user.dir");
         testSourceDir = baseDir + "/src/test/java/test/enums";
         outputDir = baseDir + "/target/test-classes";
@@ -55,21 +55,24 @@ class SourceEnumCheckerTest {
     }
 
     /**
-     * 获取单个枚举文件的路径。
+     * Get the path for a single enum test file.
+     *
+     * @param fileName Name of the enum file
+     * @return Path to the enum file
      */
     private Path getEnumFile(String fileName) {
         return Paths.get(testSourceDir, fileName);
     }
 
     /**
-     * 测试：没有重复的带注解枚举，应该返回空结果。
+     * Test: Annotated enum without duplicates should return an empty result.
      */
     @Test
     void testGoodEnum_NoDuplicates() throws IOException {
         SourceEnumChecker checker = new SourceEnumChecker(Paths.get(outputDir), log);
         SourceEnumChecker.CheckResult result = checker.checkFile(getEnumFile("GoodEnumWithAnnotation.java"));
 
-        // GoodEnumWithAnnotation 没有重复，应该检查通过
+        // GoodEnumWithAnnotation has no duplicates, should pass the check
         assertTrue(result.getSingleDuplicates().isEmpty());
         assertTrue(result.getCompositeDuplicates().isEmpty());
         assertFalse(result.hasDuplicates());
@@ -77,14 +80,14 @@ class SourceEnumCheckerTest {
     }
 
     /**
-     * 测试：单个字段有重复，应该正确检测。
+     * Test: When a single field has duplicates, it should be detected correctly.
      */
     @Test
     void testBadEnumSingleDuplicate_DetectsDuplicate() throws IOException {
         SourceEnumChecker checker = new SourceEnumChecker(Paths.get(outputDir), log);
         SourceEnumChecker.CheckResult result = checker.checkFile(getEnumFile("BadEnumSingleDuplicate.java"));
 
-        // 应该检测到一处单独字段重复（code=100）
+        // Should detect one single-field duplicate (code=100)
         assertFalse(result.getSingleDuplicates().isEmpty());
         assertTrue(result.getCompositeDuplicates().isEmpty());
         assertTrue(result.hasDuplicates());
@@ -100,14 +103,14 @@ class SourceEnumCheckerTest {
     }
 
     /**
-     * 测试：组合字段有重复，应该正确检测。
+     * Test: When a combination of fields has duplicates, it should be detected correctly.
      */
     @Test
     void testBadEnumCompositeDuplicate_DetectsCompositeDuplicate() throws IOException {
         SourceEnumChecker checker = new SourceEnumChecker(Paths.get(outputDir), log);
         SourceEnumChecker.CheckResult result = checker.checkFile(getEnumFile("BadEnumCompositeDuplicate.java"));
 
-        // BadEnumCompositeDuplicate 有一处组合重复
+        // BadEnumCompositeDuplicate has one composite duplicate
         int totalSingle = result.getSingleDuplicates().size();
         int totalComposite = result.getCompositeDuplicates().size();
 
@@ -128,18 +131,18 @@ class SourceEnumCheckerTest {
     }
 
     /**
-     * 测试：同时使用单独检查和组合检查，都能正常工作。
+     * Test: Using both individual and composite checks together works correctly.
      */
     @Test
     void testMixedCheck_BothWork() throws IOException {
         SourceEnumChecker checker = new SourceEnumChecker(Paths.get(outputDir), log);
         SourceEnumChecker.CheckResult result = checker.checkFile(getEnumFile("BadEnumMixedCheck.java"));
 
-        // BadEnumMixedCheck 中：
-        // - code=101 重复（单独检查）出现在 PRODUCT_A, PRODUCT_C, PRODUCT_D 三个常量 → 1 处重复
-        // - (type, category) = (1, electronics) → 重复在 PRODUCT_A 和 PRODUCT_B → 1 处
-        // - (type, category) = (2, clothing) → 重复在 PRODUCT_C 和 PRODUCT_D → 1 处
-        // 所以总共有 1 个单独重复 + 2 个组合重复 = 3 处重复
+        // In BadEnumMixedCheck:
+        // - code=101 is duplicated (individual check) among PRODUCT_A, PRODUCT_C, PRODUCT_D → 1 duplicate
+        // - (type, category) = (1, electronics) → duplicated between PRODUCT_A and PRODUCT_B → 1
+        // - (type, category) = (2, clothing) → duplicated between PRODUCT_C and PRODUCT_D → 1
+        // So total is 1 individual + 2 composite = 3 duplicates in total
         assertTrue(result.hasDuplicates());
         assertEquals(1, result.getSingleDuplicates().size());
         assertEquals(2, result.getCompositeDuplicates().size());
@@ -151,28 +154,28 @@ class SourceEnumCheckerTest {
         assertEquals(101, singleDuplicate.getValue());
         assertEquals(3, singleDuplicate.getEnumConstants().size());
 
-        // 验证第一个组合重复 (1, electronics)
+        // Verify first composite duplicate (1, electronics)
         boolean foundFirst = result.getCompositeDuplicates().stream()
                 .anyMatch(d -> d.getValues().equals(Lists.newArrayList(1, "electronics")));
         assertTrue(foundFirst);
 
-        // 验证第二个组合重复 (2, clothing)
+        // Verify second composite duplicate (2, clothing)
         boolean foundSecond = result.getCompositeDuplicates().stream()
                 .anyMatch(d -> d.getValues().equals(Lists.newArrayList(2, "clothing")));
         assertTrue(foundSecond);
     }
 
     /**
-     * 测试：enabled=false 的枚举，即使有重复也应该跳过。
+     * Test: When enabled=false, the enum should be skipped even if it has duplicates.
      */
     @Test
     void testDisabledEnum_SkipsCheck() throws IOException {
         SourceEnumChecker checker = new SourceEnumChecker(Paths.get(outputDir), log);
 
-        // EnumDisabledByAnnotation 有重复但是 disabled，不应该出现在结果中
+        // EnumDisabledByAnnotation has duplicates but is disabled, should not appear in results
         SourceEnumChecker.CheckResult result = checker.checkFile(getEnumFile("EnumDisabledByAnnotation.java"));
 
-        // 因为禁用了检查，所以不应该有任何重复被报告
+        // Since checking is disabled, no duplicates should be reported
         assertFalse(result.hasDuplicates());
         assertEquals(0, result.getTotalDuplicates());
         assertTrue(result.getSingleDuplicates().isEmpty());
@@ -180,14 +183,14 @@ class SourceEnumCheckerTest {
     }
 
     /**
-     * 测试：字符串类型字段的重复，应该被正确检测。
+     * Test: Duplicates in String-type fields should be detected correctly.
      */
     @Test
     void testStringDuplicate_DetectsCorrectly() throws IOException {
         SourceEnumChecker checker = new SourceEnumChecker(Paths.get(outputDir), log);
         SourceEnumChecker.CheckResult result = checker.checkFile(getEnumFile("BadEnumStringDuplicate.java"));
 
-        // 应该检测到 "active" 重复
+        // Should detect "active" duplicate
         List<DuplicateInfo> singles = result.getSingleDuplicates();
         boolean found = singles.stream()
                 .anyMatch(d ->
@@ -200,31 +203,31 @@ class SourceEnumCheckerTest {
     }
 
     /**
-     * 测试：扫描整个目录时，总重复计数正确。
+     * Test: When scanning an entire directory, the total duplicate count is correct.
      * <p>
-     * 测试目录中有多个重复，验证总数是否正确：
+     * The test directory contains multiple duplicates, verify the total count is correct:
      * <ul>
-     *   <li>BadEnumSingleDuplicate: 1 个单独重复</li>
-     *   <li>BadEnumCompositeDuplicate: 1 个组合重复</li>
-     *   <li>BadEnumMixedCheck: 1 个单独 + 2 个组合 = 3</li>
-     *   <li>BadEnumStringDuplicate: 1 个单独重复</li>
+     *   <li>BadEnumSingleDuplicate: 1 individual duplicate</li>
+     *   <li>BadEnumCompositeDuplicate: 1 composite duplicate</li>
+     *   <li>BadEnumMixedCheck: 1 individual + 2 composite = 3</li>
+     *   <li>BadEnumStringDuplicate: 1 individual duplicate</li>
      *   <li>Good...: 0</li>
      *   <li>Disabled: 0</li>
      * </ul>
-     * 总共应该是 1+1+3+1 = 6 个重复。
+     * Total should be 1+1+3+1 = 6 duplicates.
      */
     @Test
     void testTotalCount_Correct() throws IOException {
         SourceEnumChecker checker = new SourceEnumChecker(Paths.get(outputDir), log);
         SourceEnumChecker.CheckResult result = checker.checkDirectory(Paths.get(testSourceDir));
 
-        // 计算预期：
+        // Expected calculation:
         // BadEnumSingleDuplicate (1) +
         // BadEnumCompositeDuplicate (1) +
         // BadEnumMixedCheck (3) +
-        // BadEnumStringDuplicate (1) = 总计 6
-        // 单独重复：BadEnumSingleDuplicate(1) + BadEnumMixedCheck(1) + BadEnumStringDuplicate(1) = 3
-        // 组合重复：BadEnumCompositeDuplicate(1) + BadEnumMixedCheck(2) = 3
+        // BadEnumStringDuplicate (1) = Total 6
+        // Individual: BadEnumSingleDuplicate(1) + BadEnumMixedCheck(1) + BadEnumStringDuplicate(1) = 3
+        // Composite: BadEnumCompositeDuplicate(1) + BadEnumMixedCheck(2) = 3
         assertEquals(3, result.getSingleDuplicates().size());
         assertEquals(3, result.getCompositeDuplicates().size());
         assertEquals(6, result.getTotalDuplicates());

@@ -3,7 +3,7 @@ package test.enums;
 import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 /**
- * 没有重复的枚举，带有 {@link EnumCheck} 注解，应该通过检查。
+ * Enum without duplicates, has {@link EnumCheck} annotation, should pass the check.
  */
 @EnumCheck({"code", "name"})
 public enum GoodEnumWithAnnotation {

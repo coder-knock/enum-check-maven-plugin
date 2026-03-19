@@ -7,26 +7,26 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 单个组合检查分组的配置。
+ * Configuration for a single composite check group.
  * <p>
- * 对应 {@link CheckGroup CheckGroup}
- * 注解，包含该分组需要检查的字段列表。
+ * Corresponds to the {@link CheckGroup CheckGroup}
+ * annotation, contains the list of fields that need to be checked in this group.
  */
 public class CheckGroupConfig {
 
     /**
-     * 该分组中需要参与组合检查的字段列表。
+     * List of fields that need to participate in this composite check.
      */
     private final List<String> fields;
 
     // -------------------------------------------------------------------------
-    // 构造器
+    // Constructor
     // -------------------------------------------------------------------------
 
     /**
-     * 创建一个组合分组配置。
+     * Creates a composite group configuration.
      *
-     * @param fields 参与组合检查的字段列表
+     * @param fields List of fields participating in the composite check
      */
     public CheckGroupConfig(List<String> fields) {
         this.fields = Collections.unmodifiableList(new ArrayList<>(fields));
@@ -37,18 +37,18 @@ public class CheckGroupConfig {
     // -------------------------------------------------------------------------
 
     /**
-     * 获取参与组合检查的字段列表。
+     * Gets the list of fields participating in the composite check.
      *
-     * @return 不可修改的字段名称列表
+     * @return Unmodifiable list of field names
      */
     public List<String> getFields() {
         return fields;
     }
 
     /**
-     * 获取该分组包含的字段数量。
+     * Gets the number of fields contained in this group.
      *
-     * @return 字段数量
+     * @return Number of fields
      */
     public int size() {
         return fields.size();

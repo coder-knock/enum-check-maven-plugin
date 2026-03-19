@@ -281,7 +281,7 @@ maven-enum-check-plugin/
 
 ```bash
 # Clone the project
-git clone https://github.com/coder-knock/maven-enum-check-plugin.git
+git clone https://github.com/coder-knock/enum-check-maven-plugin.git
 cd maven-enum-check-plugin
 
 # Build package

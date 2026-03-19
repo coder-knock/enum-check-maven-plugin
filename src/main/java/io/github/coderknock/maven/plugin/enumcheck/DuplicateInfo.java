@@ -5,37 +5,37 @@ import java.util.List;
 
 public class DuplicateInfo {
 
-    /** 存在重复值的枚举类全限定名，例如 {@code "com.example.StatusEnum"}。 */
+    /** Fully qualified name of the enum class that contains duplicate values, e.g., {@code "com.example.StatusEnum"}. */
     private final String enumClassName;
 
-    /** 出现重复值的字段名，例如 {@code "code"}。 */
+    /** Name of the field that has duplicate values, e.g., {@code "code"}. */
     private final String fieldName;
 
     /**
-     * 重复的具体值，例如整数 {@code 200} 或字符串 {@code "active"}。
+     * The duplicated value, e.g., integer {@code 200} or string {@code "active"}.
      *
-     * <p>类型取决于枚举字段的声明类型，可能是 {@link Integer}、{@link String} 等。
+     * <p>The type depends on the declared type of the enum field, could be {@link Integer}, {@link String}, etc.
      */
     private final Object value;
 
     /**
-     * 共享该重复值的枚举常量名称列表。
+     * List of enum constant names that share this duplicated value.
      *
-     * <p>列表中至少包含 2 个元素（否则不构成重复），例如 {@code ["SUCCESS", "OK"]}。
+     * <p>The list contains at least 2 elements (otherwise it's not a duplicate), e.g., {@code ["SUCCESS", "OK"]}.
      */
     private final List<String> enumConstants;
 
     // -------------------------------------------------------------------------
-    // 构造器
+    // Constructor
     // -------------------------------------------------------------------------
 
     /**
-     * 创建一个 DuplicateInfo 实例。
+     * Create a new DuplicateInfo instance.
      *
-     * @param enumClassName  枚举类全限定名
-     * @param fieldName      出现重复的字段名
-     * @param value          重复的字段值
-     * @param enumConstants  共享该值的枚举常量名列表（至少 2 个）
+     * @param enumClassName  Fully qualified name of the enum class
+     * @param fieldName      Name of the field with duplicates
+     * @param value          The duplicated field value
+     * @param enumConstants  List of enum constant names sharing this value (at least 2)
      */
     public DuplicateInfo(String enumClassName, String fieldName,
                          Object value, List<String> enumConstants) {
@@ -50,36 +50,36 @@ public class DuplicateInfo {
     // -------------------------------------------------------------------------
 
     /**
-     * 返回存在重复值的枚举类全限定名。
+     * Get the fully qualified name of the enum class with duplicates.
      *
-     * @return 枚举类全限定名，例如 {@code "com.example.StatusEnum"}
+     * @return Fully qualified name of the enum class, e.g., {@code "com.example.StatusEnum"}
      */
     public String getEnumClassName() {
         return enumClassName;
     }
 
     /**
-     * 返回出现重复值的字段名。
+     * Get the name of the field that has duplicates.
      *
-     * @return 字段名，例如 {@code "code"}
+     * @return Field name, e.g., {@code "code"}
      */
     public String getFieldName() {
         return fieldName;
     }
 
     /**
-     * 返回重复的字段值。
+     * Get the duplicated field value.
      *
-     * @return 字段值，类型为字段声明类型对应的包装类或 {@link String}
+     * @return The field value, type is the wrapper type corresponding to the field declaration or {@link String}
      */
     public Object getValue() {
         return value;
     }
 
     /**
-     * 返回共享该重复值的枚举常量名称列表。
+     * Get the list of enum constant names that share this duplicated value.
      *
-     * @return 枚举常量名列表，例如 {@code ["SUCCESS", "OK"]}，至少包含 2 个元素
+     * @return List of enum constant names, e.g., {@code ["SUCCESS", "OK"]}, contains at least 2 elements
      */
     public List<String> getEnumConstants() {
         return enumConstants;
@@ -90,10 +90,10 @@ public class DuplicateInfo {
     // -------------------------------------------------------------------------
 
     /**
-     * 返回该重复信息的简洁描述，用于日志输出。
+     * Returns a concise description of this duplicate information for logging.
      *
-     * <p>格式：{@code 枚举类名.字段名: 重复值 in [常量列表]}
-     * <br>示例：{@code com.example.StatusEnum.code: 200 in [SUCCESS, OK]}
+     * <p>Format: {@code enumClass.field: value in [constant list]}
+     * <br>Example: {@code com.example.StatusEnum.code: 200 in [SUCCESS, OK]}
      */
     @Override
     public String toString() {

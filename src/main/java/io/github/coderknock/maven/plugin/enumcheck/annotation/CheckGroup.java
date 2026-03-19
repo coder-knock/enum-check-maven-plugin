@@ -3,16 +3,17 @@ package io.github.coderknock.maven.plugin.enumcheck.annotation;
 import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 /**
- * 组合字段检查分组注解。
+ * Composite field check group annotation.
  * <p>
- * 用于在 {@link EnumCheck} 中声明一组需要组合验重的字段，
- * 表示"这多个字段的值组合起来必须唯一，不能有重复"。
+ * Used within {@link EnumCheck} to declare a group of fields that should be
+ * checked for duplicate combinations. It means "the combination of values
+ * from these multiple fields must be unique, no duplicates allowed".
  * <p>
- * 使用示例：
+ * Usage example:
  * <pre>{@code
  * @EnumCheck(groups = {
- *     @CheckGroup(fields = {"code", "type"}),  // code + type 组合必须唯一
- *     @CheckGroup(fields = {"name"})           // name 单独检查必须唯一
+ *     @CheckGroup(fields = {"code", "type"}),  // code + type combination must be unique
+ *     @CheckGroup(fields = {"name"})           // name alone must be unique
  * })
  * public enum MyEnum { ... }
  * }</pre>
@@ -20,12 +21,13 @@ import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 public @interface CheckGroup {
 
     /**
-     * 该分组中需要参与组合验重的字段名称数组。
+     * Array of field names that should participate in this composite check.
      * <p>
-     * 数组不能为空，至少需要指定一个字段。
-     * 如果只指定一个字段，效果等同于单独检查该字段。
+     * The array cannot be empty, at least one field must be specified.
+     * If only a single field is specified, this is equivalent to checking
+     * that field individually.
      *
-     * @return 字段名称数组
+     * @return Array of field names
      */
     String[] fields();
 }

@@ -3,12 +3,12 @@ package test.enums;
 import io.github.coderknock.maven.plugin.enumcheck.annotation.EnumCheck;
 
 /**
- * 单个字段重复，应该被检测出来。
+ * Single field duplicate, should be detected.
  */
 @EnumCheck("code")
 public enum BadEnumSingleDuplicate {
     FIRST(100, "first"),
-    SECOND(100, "second"),  // code 重复
+    SECOND(100, "second"),  // code duplicate
     THIRD(300, "third");
 
     private final int code;

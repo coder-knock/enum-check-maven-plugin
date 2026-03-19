@@ -8,30 +8,33 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 单个枚举类的检查配置。
+ * Check configuration for a single enum class.
  * <p>
- * 从 {@link EnumCheck EnumCheck}
- * 注解中解析出检查规则，封装为这个配置对象，供后续检查使用。
+ * Parses the checking rules from the {@link EnumCheck EnumCheck}
+ * annotation and encapsulates them into this configuration object
+ * for subsequent checking.
  */
 public class CheckConfiguration {
 
     /**
-     * 是否启用检查。false 表示跳过这个枚举。
+     * Whether checking is enabled. false means skip this enum.
      */
     private final boolean enabled;
 
     /**
-     * 单独检查的字段列表。每个字段各自要求值唯一。
+     * List of fields to check individually. Each field must have
+     * a unique value by itself.
      */
     private final List<String> singleFields;
 
     /**
-     * 组合检查分组列表。每个分组内多个字段组合要求唯一。
+     * List of composite check groups. Within each group, the combination
+     * of multiple fields must have a unique combination.
      */
     private final List<CheckGroupConfig> groupConfigs;
 
     // -------------------------------------------------------------------------
-    // 构造器
+    // Constructor
     // -------------------------------------------------------------------------
 
     private CheckConfiguration(Builder builder) {
@@ -47,56 +50,57 @@ public class CheckConfiguration {
     // -------------------------------------------------------------------------
 
     /**
-     * 返回是否启用检查。
+     * Returns whether checking is enabled.
      *
-     * @return true 表示启用，false 表示跳过该枚举
+     * @return true means enabled, false means skip this enum
      */
     public boolean isEnabled() {
         return enabled;
     }
 
     /**
-     * 返回所有需要单独检查的字段名称列表。
+     * Returns the list of all field names that need individual checking.
      *
-     * @return 不可修改的字段名称列表
+     * @return Unmodifiable list of field names
      */
     public List<String> getSingleFields() {
         return singleFields;
     }
 
     /**
-     * 返回所有组合检查分组配置列表。
+     * Returns the list of all composite check group configurations.
      *
-     * @return 不可修改的分组配置列表
+     * @return Unmodifiable list of group configurations
      */
     public List<CheckGroupConfig> getGroupConfigs() {
         return groupConfigs;
     }
 
     /**
-     * 判断是否有任何检查配置（至少一个单独字段或一个分组）。
+     * Checks whether there is any check configuration (at least one
+     * individual field or one group).
      *
-     * @return true 表示有需要检查的项目，false 表示不需要检查任何内容
+     * @return true means there are checks to perform, false means no checks needed
      */
     public boolean hasChecks() {
         return !singleFields.isEmpty() || !groupConfigs.isEmpty();
     }
 
     // -------------------------------------------------------------------------
-    // 构建器
+    // Builder
     // -------------------------------------------------------------------------
 
     /**
-     * 创建一个新的构建器实例。
+     * Creates a new builder instance.
      *
-     * @return 构建器
+     * @return The builder
      */
     public static Builder builder() {
         return new Builder();
     }
 
     /**
-     * {@link CheckConfiguration} 构建器。
+     * Builder for {@link CheckConfiguration}.
      */
     public static class Builder {
         private boolean enabled = true;
@@ -104,9 +108,9 @@ public class CheckConfiguration {
         private final List<CheckGroupConfig> groupConfigs = new ArrayList<>();
 
         /**
-         * 设置是否启用检查。
+         * Sets whether checking is enabled.
          *
-         * @param enabled true 启用，false 跳过
+         * @param enabled true enables, false skips
          * @return this
          */
         public Builder enabled(boolean enabled) {
@@ -115,9 +119,9 @@ public class CheckConfiguration {
         }
 
         /**
-         * 添加一个单独检查的字段。
+         * Adds an individually checked field.
          *
-         * @param fieldName 字段名称
+         * @param fieldName Field name
          * @return this
          */
         public Builder addSingleField(String fieldName) {
@@ -126,9 +130,9 @@ public class CheckConfiguration {
         }
 
         /**
-         * 添加多个单独检查的字段。
+         * Adds multiple individually checked fields.
          *
-         * @param fieldNames 字段名称列表
+         * @param fieldNames List of field names
          * @return this
          */
         public Builder addSingleFields(Iterable<String> fieldNames) {
@@ -139,9 +143,9 @@ public class CheckConfiguration {
         }
 
         /**
-         * 添加一个组合检查分组。
+         * Adds a composite check group.
          *
-         * @param groupConfig 分组配置
+         * @param groupConfig Group configuration
          * @return this
          */
         public Builder addGroup(CheckGroupConfig groupConfig) {
@@ -150,9 +154,9 @@ public class CheckConfiguration {
         }
 
         /**
-         * 构建最终配置对象。
+         * Builds the final configuration object.
          *
-         * @return 不可变的配置对象
+         * @return Immutable configuration object
          */
         public CheckConfiguration build() {
             return new CheckConfiguration(this);
